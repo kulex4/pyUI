@@ -36,10 +36,10 @@ from suit.core.objects import BaseLogic
 import ogre.renderer.OGRE as ogre
 import ogre.io.OIS as ois
 import table
+import logic_controls
 
 def initialize():
     pass
-
 
 def shutdown():
     pass
@@ -61,7 +61,8 @@ class TextViewer(BaseLogic):
         self.rectAttached = False
         
         self._createArea = self._createStaticText
-        
+        #self.textArea = logic_controls.EditPanel()
+
         # creating rectangle (surface)
 #        self.rect = ogre.Rectangle2D(True)
 #        self.rect.setCorners(-1.0, 1.0, 1.0, -1.0)
@@ -71,7 +72,7 @@ class TextViewer(BaseLogic):
     def __del__(self):
         """Destructor
         """        
-        BaseLogic.__del__(self)        
+        BaseLogic.__del__(self)
         
     def delete(self):
         """Deletion message
@@ -86,7 +87,8 @@ class TextViewer(BaseLogic):
         """Logic update
         """
         BaseLogic._update(self, _timeSinceLastFrame)
-        self._updateState() 
+        self._updateState()
+        self._onContentUpdate()
                     
     def _setSheet(self, _sheet):
         """Sets sheet for a logic
@@ -158,7 +160,7 @@ class TextViewer(BaseLogic):
         pos3d = self._getSheet().getPosition()
         pos2d = render_engine.pos3dTo2dWindow(pos3d)
         return (pos2d[0] - 45, pos2d[1] - 45)
-    
+
     def getContent(self):        
         import suit.core.sc_utils as sc_utils
         import suit.core.keynodes as keynodes
@@ -175,9 +177,10 @@ class TextViewer(BaseLogic):
             if value is None:
                 return ""
             
-            return value            
-        ob = table.table("information")
+            return value
+        #return self.textArea.getText()
 
+        ob = table.table("information")
         return ob.makeTextTable() #"Text\nAnd Text"
     
     def _createStaticText(self):
